@@ -3,6 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { supabase } from '../lib/supabase';
 import RobuxIcon from '../components/RobuxIcon';
 import { ShoppingCart, CheckCircle, AlertCircle, X } from 'lucide-react';
+import qrisImg from '../images/qris.jpg';
 
 interface ShopPageProps {
   onNavigate: (page: string) => void;
@@ -71,12 +72,12 @@ function calculatePrice(robux: number) {
 function formatRupiah(n: number) {
   return 'Rp' + n.toLocaleString('id-ID');
 }
-
 export default function ShopPage({ onNavigate }: ShopPageProps) {
   const { user } = useAuth();
+
   const [selectedPack, setSelectedPack] = useState<{ robux: number; price: number } | null>(null);
   const [robloxUsername, setRobloxUsername] = useState('');
-  const [paymentMethod, setPaymentMethod] = useState('transfer');
+  const [paymentMethod, setPaymentMethod] = useState('qris');
   const [submitting, setSubmitting] = useState(false);
   const [notification, setNotification] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
   const [customRobux, setCustomRobux] = useState<string>('');
@@ -112,6 +113,10 @@ export default function ShopPage({ onNavigate }: ShopPageProps) {
       setNotification({ type: 'error', message: 'Username Roblox minimal 3 karakter.' });
       return;
     }
+    if (paymentMethod !== 'qris') {
+      setNotification({ type: 'error', message: 'Metode pembayaran ini sedang dalam masa perbaikan.' });
+      return;
+    }
 
     setSubmitting(true);
     try {
@@ -129,8 +134,18 @@ export default function ShopPage({ onNavigate }: ShopPageProps) {
       setSelectedPack(null);
       setRobloxUsername('');
       setCustomRobux('');
-    } catch {
-      setNotification({ type: 'error', message: 'Gagal membuat pesanan. Coba lagi.' });
+      
+      // Redirect to history page after a short delay
+      setTimeout(() => {
+        onNavigate('history');
+      }, 1500);
+    } catch (err: any) {
+      console.error('DETAIL ERROR PEMBELIAN:', err);
+      const errorMsg = err.message || err.details || 'Koneksi database bermasalah';
+      setNotification({ 
+        type: 'error', 
+        message: `PESANAN GAGAL: ${errorMsg}` 
+      });
     } finally {
       setSubmitting(false);
     }
@@ -250,7 +265,7 @@ export default function ShopPage({ onNavigate }: ShopPageProps) {
       {/* Purchase Modal */}
       {selectedPack && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md animate-fadeIn">
-          <div className="w-full max-w-md bg-white border border-slate-200 rounded-3xl p-8 shadow-2xl">
+          <div className="w-full max-w-md bg-white border border-slate-200 rounded-3xl p-8 shadow-2xl overflow-y-auto max-h-[90vh]">
             <div className="flex items-center justify-between mb-8">
               <h3 className="text-2xl font-bold text-slate-900">Konfirmasi</h3>
               <button onClick={() => setSelectedPack(null)} className="p-2 rounded-xl text-slate-400 hover:text-slate-900 hover:bg-slate-100 transition-all">
@@ -288,25 +303,42 @@ export default function ShopPage({ onNavigate }: ShopPageProps) {
                     { id: 'ewallet', label: 'E-Wallet' },
                     { id: 'qris', label: 'QRIS Scan' },
                     { id: 'pulsa', label: 'Pulsa' },
-                  ].map((method) => (
-                    <button
-                      key={method.id}
-                      onClick={() => setPaymentMethod(method.id)}
-                      className={`px-4 py-3.5 rounded-2xl text-sm font-bold transition-all border-2 ${
-                        paymentMethod === method.id
-                          ? 'border-green-500 bg-green-50 text-green-700 shadow-md shadow-green-500/10'
-                          : 'bg-white text-slate-500 border-slate-100 hover:border-slate-200 hover:bg-slate-50'
-                      }`}
-                    >
-                      {method.label}
-                    </button>
-                  ))}
+                  ].map((method) => {
+                    const isQris = method.id === 'qris';
+                    return (
+                      <button
+                        key={method.id}
+                        onClick={() => isQris && setPaymentMethod(method.id)}
+                        className={`px-4 py-3.5 rounded-2xl text-sm font-bold transition-all border-2 relative overflow-hidden ${
+                          paymentMethod === method.id
+                            ? 'border-green-500 bg-green-50 text-green-700 shadow-md shadow-green-500/10'
+                            : isQris 
+                              ? 'bg-white text-slate-500 border-slate-100 hover:border-slate-200 hover:bg-slate-50'
+                              : 'bg-slate-50 text-slate-400 border-slate-100 cursor-not-allowed grayscale'
+                        }`}
+                      >
+                        <div className="flex flex-col items-center">
+                          <span>{method.label}</span>
+                          {!isQris && <span className="text-[10px] text-red-400 font-medium">Dalam Perbaikan</span>}
+                        </div>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 
+              {paymentMethod === 'qris' && (
+                <div className="p-4 rounded-2xl bg-slate-50 border-2 border-dashed border-slate-200 text-center">
+                  <p className="text-slate-500 text-xs font-bold uppercase tracking-widest mb-4">Silakan Scan QRIS Berikut</p>
+                  <div className="bg-white p-4 rounded-xl shadow-sm inline-block">
+                    <img src={qrisImg} alt="QRIS Scan" className="max-w-[200px] h-auto mx-auto" />
+                  </div>
+                </div>
+              )}
+
               <button
                 onClick={handleSubmit}
-                disabled={submitting}
+                disabled={submitting || paymentMethod !== 'qris'}
                 className="w-full py-5 rounded-2xl bg-slate-900 text-white font-black shadow-xl shadow-slate-900/20 hover:shadow-slate-900/40 disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-[0.98] text-lg"
               >
                 {submitting ? 'Memproses...' : 'Selesaikan Pembayaran'}
@@ -315,6 +347,7 @@ export default function ShopPage({ onNavigate }: ShopPageProps) {
           </div>
         </div>
       )}
+
 
       {/* Notification */}
       {notification && (

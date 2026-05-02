@@ -1,8 +1,12 @@
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { User, Settings, Shield, Trophy, HelpCircle, LogOut, ChevronRight, Edit2, Mail, Calendar } from 'lucide-react';
+import { User, Settings, Shield, Trophy, HelpCircle, LogOut, ChevronRight, Edit2, Mail, Calendar, MessageCircle, LayoutDashboard } from 'lucide-react';
 
-export default function ProfilePage() {
+interface ProfilePageProps {
+  onNavigate?: (page: string) => void;
+}
+
+export default function ProfilePage({ onNavigate }: ProfilePageProps) {
   const { user, signOut } = useAuth();
   const [activeSection, setActiveSection] = useState('profile');
 
@@ -11,9 +15,9 @@ export default function ProfilePage() {
     { id: 'leaderboard', label: 'Leaderboard', icon: <Trophy className="w-5 h-5" /> },
     { id: 'settings', label: 'Settings & Privacy', icon: <Settings className="w-5 h-5" /> },
     { id: 'help', label: 'Bantuan', icon: <HelpCircle className="w-5 h-5" /> },
+    ...(user?.email === 'adit@nusabs.sch.id' ? [{ id: 'admin', label: 'Admin Dashboard', icon: <LayoutDashboard className="w-5 h-5" />, isAdmin: true }] : []),
   ];
 
-  const leaderboardData: { name: string; total: number; rank: number }[] = [];
 
   const renderContent = () => {
     switch (activeSection) {
@@ -66,14 +70,20 @@ export default function ProfilePage() {
             <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
               <h3 className="text-lg font-bold text-slate-900 mb-6">Pengaturan Akun</h3>
               <div className="space-y-2">
-                <button className="w-full flex items-center justify-between p-4 rounded-xl hover:bg-slate-50 transition-colors text-left group">
+                <button 
+                  onClick={() => onNavigate?.('privacy')}
+                  className="w-full flex items-center justify-between p-4 rounded-xl hover:bg-slate-50 transition-colors text-left group"
+                >
                   <div className="flex items-center gap-3">
                     <Shield className="w-5 h-5 text-slate-400 group-hover:text-green-600" />
                     <span className="font-medium text-slate-700">Privasi & Keamanan</span>
                   </div>
                   <ChevronRight className="w-4 h-4 text-slate-300" />
                 </button>
-                <button className="w-full flex items-center justify-between p-4 rounded-xl hover:bg-slate-50 transition-colors text-left group">
+                <button 
+                  onClick={() => onNavigate?.('notifications')}
+                  className="w-full flex items-center justify-between p-4 rounded-xl hover:bg-slate-50 transition-colors text-left group"
+                >
                   <div className="flex items-center gap-3">
                     <Settings className="w-5 h-5 text-slate-400 group-hover:text-green-600" />
                     <span className="font-medium text-slate-700">Notifikasi</span>
@@ -92,23 +102,42 @@ export default function ProfilePage() {
               
               <div className="space-y-6">
                 <div className="p-5 rounded-2xl bg-slate-50 border border-slate-100">
-                  <h4 className="font-bold text-slate-900 mb-2">Bagaimana cara membeli Robux?</h4>
-                  <p className="text-sm text-slate-600 leading-relaxed">
-                    Pilih paket yang Anda inginkan di halaman Shop, masukkan username Roblox Anda, pilih metode pembayaran, dan lakukan pembayaran sesuai instruksi. Robux akan dikirim segera setelah pembayaran diverifikasi.
+                  <h4 className="font-bold text-slate-900 mb-2 flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-green-500" />
+                    Bagaimana cara membeli Robux?
+                  </h4>
+                  <p className="text-sm text-slate-600 leading-relaxed pl-4">
+                    Pilih paket yang Anda inginkan di halaman Shop, masukkan username Roblox Anda, pilih metode pembayaran QRIS, dan lakukan scan. Setelah membayar, silakan klik tombol konfirmasi WhatsApp di riwayat belanja.
                   </p>
                 </div>
 
                 <div className="p-5 rounded-2xl bg-slate-50 border border-slate-100">
-                  <h4 className="font-bold text-slate-900 mb-2">Berapa lama proses pengiriman?</h4>
-                  <p className="text-sm text-slate-600 leading-relaxed">
-                    Proses pengiriman biasanya memakan waktu 5-15 menit. Namun, dalam beberapa kasus bisa memakan waktu hingga 24 jam tergantung antrian sistem.
+                  <h4 className="font-bold text-slate-900 mb-2 flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-blue-500" />
+                    Berapa lama proses pengiriman?
+                  </h4>
+                  <p className="text-sm text-slate-600 leading-relaxed pl-4">
+                    Proses pengiriman biasanya memakan waktu 5-15 menit setelah konfirmasi. Namun, dalam beberapa kasus bisa memakan waktu hingga 24 jam tergantung antrian sistem dan status server Roblox.
                   </p>
                 </div>
 
                 <div className="p-5 rounded-2xl bg-slate-50 border border-slate-100">
-                  <h4 className="font-bold text-slate-900 mb-2">Kenapa pesanan saya belum masuk?</h4>
-                  <p className="text-sm text-slate-600 leading-relaxed">
-                    Pastikan username Roblox yang Anda masukkan benar. Jika dalam 1 jam belum masuk, silakan hubungi admin melalui WhatsApp dengan melampirkan bukti pembayaran.
+                  <h4 className="font-bold text-slate-900 mb-2 flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-red-500" />
+                    Kenapa status saya masih "Not Paid"?
+                  </h4>
+                  <p className="text-sm text-slate-600 leading-relaxed pl-4">
+                    Pastikan Anda telah mengirimkan bukti pembayaran melalui tombol WhatsApp di detail riwayat belanja. Admin akan memverifikasi secara manual sebelum mengubah status menjadi "Paid".
+                  </p>
+                </div>
+
+                <div className="p-5 rounded-2xl bg-slate-50 border border-slate-100">
+                  <h4 className="font-bold text-slate-900 mb-2 flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-yellow-500" />
+                    Apakah aman bertransaksi di sini?
+                  </h4>
+                  <p className="text-sm text-slate-600 leading-relaxed pl-4">
+                    Tentu saja! Kami telah memproses ribuan transaksi dengan aman. Kami tidak pernah meminta password akun Roblox Anda, hanya username untuk keperluan pengiriman.
                   </p>
                 </div>
               </div>
@@ -138,6 +167,7 @@ export default function ProfilePage() {
     }
   };
 
+
   return (
     <div className="min-h-screen pt-24 pb-16 px-4">
       <div className="max-w-6xl mx-auto">
@@ -156,11 +186,19 @@ export default function ProfilePage() {
               {menuItems.map((item) => (
                 <button
                   key={item.id}
-                  onClick={() => setActiveSection(item.id)}
+                  onClick={() => {
+                    if (item.id === 'admin') {
+                      onNavigate?.('admin');
+                    } else {
+                      setActiveSection(item.id);
+                    }
+                  }}
                   className={`w-full flex items-center gap-3 px-6 py-4 text-sm font-medium transition-all ${
                     activeSection === item.id
                       ? 'bg-green-50 text-green-600 border-r-4 border-green-600'
-                      : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'
+                      : (item as any).isAdmin 
+                        ? 'text-slate-900 bg-slate-50 hover:bg-slate-100'
+                        : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'
                   }`}
                 >
                   {item.icon}

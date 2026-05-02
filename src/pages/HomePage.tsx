@@ -1,5 +1,6 @@
-import { Zap, Shield, Headphones, ChevronRight, Sparkles } from 'lucide-react';
+import { ChevronRight, Sparkles } from 'lucide-react';
 import RobuxIcon from '../components/RobuxIcon';
+import logoEct from '../images/ect.png';
 
 interface HomePageProps {
   onNavigate: (page: string) => void;
@@ -8,17 +9,17 @@ interface HomePageProps {
 export default function HomePage({ onNavigate }: HomePageProps) {
   const highlights = [
     {
-      icon: <Zap className="w-6 h-6" />,
+      icon: <img src={logoEct} alt="Ect" className="w-full h-full object-contain" />,
       title: 'Proses Kilat',
       desc: 'Robux terkirim dalam hitungan menit setelah pembayaran berhasil dikonfirmasi.',
     },
     {
-      icon: <Shield className="w-6 h-6" />,
+      icon: <img src={logoEct} alt="Ect" className="w-full h-full object-contain" />,
       title: 'Keamanan Utama',
       desc: 'Sistem keamanan tingkat tinggi. Ribuan transaksi telah berhasil diproses dengan aman.',
     },
     {
-      icon: <Headphones className="w-6 h-6" />,
+      icon: <img src={logoEct} alt="Ect" className="w-full h-full object-contain" />,
       title: 'Bantuan 24/7',
       desc: 'Tim Customer Service kami selalu siap membantu Anda kapanpun dibutuhkan.',
     },
