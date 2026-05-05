@@ -120,6 +120,21 @@ export default function ShopPage({ onNavigate }: ShopPageProps) {
 
     setSubmitting(true);
     try {
+      // Ensure profile exists (Auto-fix for users with missing profile)
+      const { data: profile, error: profileCheckError } = await supabase
+        .from('profiles')
+        .select('id')
+        .eq('id', user.id)
+        .single();
+
+      if (profileCheckError && profileCheckError.code === 'PGRST116') {
+        const username = user.user_metadata?.username || user.email?.split('@')[0] || 'User';
+        await supabase.from('profiles').insert({
+          id: user.id,
+          username: username
+        });
+      }
+
       const { error } = await supabase.from('purchases').insert({
         user_id: user.id,
         robux_amount: selectedPack.robux,
@@ -156,9 +171,9 @@ export default function ShopPage({ onNavigate }: ShopPageProps) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-50 border border-green-100 mb-4">
-            <RobuxIcon className="w-4 h-4" />
-            <span className="text-green-600 text-sm font-bold">Official Encounter Shop</span>
+          <div className="inline-flex items-center gap-2 mb-4">
+            <RobuxIcon className="w-5 h-5 text-slate-900" />
+            <span className="text-slate-900 text-sm font-bold uppercase tracking-widest">Official Encounter Shop</span>
           </div>
           <h2 className="text-4xl sm:text-5xl font-extrabold text-slate-900 mb-4 tracking-tight">Beli Robux</h2>
           <p className="text-slate-500 max-w-lg mx-auto text-lg">Pilih paket Robux atau masukkan jumlah yang kamu inginkan, proses via Gamepass. 

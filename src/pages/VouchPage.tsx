@@ -56,6 +56,25 @@ export default function VouchPage() {
     setError('');
 
     try {
+      // Ensure profile exists (Auto-fix for users with missing profile)
+      const { data: profile, error: profileCheckError } = await supabase
+        .from('profiles')
+        .select('id')
+        .eq('id', user.id)
+        .single();
+
+      if (profileCheckError && profileCheckError.code === 'PGRST116') {
+        const username = user.user_metadata?.username || user.email?.split('@')[0] || 'User';
+        const { error: profileError } = await supabase.from('profiles').insert({
+          id: user.id,
+          username: username
+        });
+        if (profileError) {
+          setError(`Gagal sinkronisasi profil: ${profileError.message}`);
+          return;
+        }
+      }
+
       const { error: insertError } = await supabase.from('reviews').insert({
         user_id: user.id,
         rating: newRating,
@@ -66,7 +85,7 @@ export default function VouchPage() {
         if (insertError.message.includes('one review per day')) {
           setError('Kamu hanya bisa memberi 1 review per hari.');
         } else {
-          setError('Gagal mengirim review. Coba lagi.');
+          setError(`Gagal mengirim review: ${insertError.message}`);
         }
         return;
       }
@@ -74,6 +93,8 @@ export default function VouchPage() {
       setNewContent('');
       setNewRating(5);
       await fetchReviews();
+    } catch (err: any) {
+      setError(`Kesalahan sistem: ${err.message}`);
     } finally {
       setSubmitting(false);
     }
@@ -95,10 +116,6 @@ export default function VouchPage() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-green-50 border border-green-100 mb-6">
-            <MessageSquare className="w-5 h-5 text-green-600" />
-            <span className="text-green-700 text-sm font-bold tracking-wide uppercase">Testimonials</span>
-          </div>
           <h2 className="text-4xl sm:text-5xl font-black text-slate-900 mb-4 tracking-tight">Encounter Vouch</h2>
           <p className="text-slate-500 text-lg font-medium">Taruh Review Jujur Kalian Disini Guys</p>
         </div>
@@ -218,8 +235,14 @@ export default function VouchPage() {
               >
                 <div className="flex items-start justify-between mb-6">
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center text-white font-black text-xl shadow-lg shadow-green-500/20">
-                      {(review.profiles?.username || 'U')[0].toUpperCase()}
+                    <div className="w-12 h-12 rounded-2xl bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-500 font-black text-xl shadow-sm overflow-hidden">
+                      {(() => {
+                        const avatar = localStorage.getItem(`avatar_${review.user_id}`);
+                        if (avatar) {
+                          return <img src={avatar} className="w-full h-full object-cover" alt="Avatar" />;
+                        }
+                        return (review.profiles?.username || 'U')[0].toUpperCase();
+                      })()}
                     </div>
                     <div>
                       <div className="text-slate-900 font-bold text-lg leading-tight">

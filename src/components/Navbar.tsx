@@ -20,7 +20,11 @@ export default function Navbar({ currentPage, onNavigate }: NavbarProps) {
   ];
 
   const handleNav = (page: string) => {
-    onNavigate(page);
+    if (page === currentPage) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      onNavigate(page);
+    }
     setMobileOpen(false);
   };
 

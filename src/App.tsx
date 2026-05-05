@@ -25,6 +25,7 @@ function AppContent() {
 
   useEffect(() => {
     localStorage.setItem('encounter_current_page', currentPage);
+    window.scrollTo(0, 0);
   }, [currentPage]);
 
   if (loading) {

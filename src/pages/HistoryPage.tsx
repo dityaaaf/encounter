@@ -72,10 +72,6 @@ export default function HistoryPage() {
     <div className="min-h-screen pt-32 pb-24 bg-[#f8fafc]">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-green-50 border border-green-100 mb-6">
-            <History className="w-5 h-5 text-green-600" />
-            <span className="text-green-700 text-sm font-bold tracking-wide uppercase">Transaction History</span>
-          </div>
           <h2 className="text-4xl sm:text-5xl font-black text-slate-900 mb-4 tracking-tight">Riwayat Belanja</h2>
           <p className="text-slate-500 text-lg font-medium">Pantau semua transaksi Robux kamu di sini.</p>
         </div>

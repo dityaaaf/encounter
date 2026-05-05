@@ -10,17 +10,17 @@ export default function HomePage({ onNavigate }: HomePageProps) {
   const highlights = [
     {
       icon: <img src={logoEct} alt="Ect" className="w-full h-full object-contain" />,
-      title: 'Proses Kilat',
+      title: 'Fast',
       desc: 'Robux terkirim dalam hitungan menit setelah pembayaran berhasil dikonfirmasi.',
     },
     {
       icon: <img src={logoEct} alt="Ect" className="w-full h-full object-contain" />,
-      title: 'Keamanan Utama',
+      title: 'Safe',
       desc: 'Sistem keamanan tingkat tinggi. Ribuan transaksi telah berhasil diproses dengan aman.',
     },
     {
       icon: <img src={logoEct} alt="Ect" className="w-full h-full object-contain" />,
-      title: 'Bantuan 24/7',
+      title: '24 Hours Support',
       desc: 'Tim Customer Service kami selalu siap membantu Anda kapanpun dibutuhkan.',
     },
   ];
@@ -33,10 +33,6 @@ export default function HomePage({ onNavigate }: HomePageProps) {
         <div className="absolute top-20 right-10 w-64 h-64 bg-blue-500/5 rounded-full blur-[100px] pointer-events-none" />
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-green-50 border border-green-100 mb-8 animate-fadeIn shadow-sm">
-            <Sparkles className="w-4 h-4 text-green-600" />
-            <span className="text-green-700 text-sm font-bold tracking-wide uppercase">Top Rated Robux Store #1</span>
-          </div>
 
           <h1 className="text-5xl sm:text-6xl md:text-8xl font-black text-slate-900 mb-8 leading-tight animate-fadeIn tracking-tight">
             Encounter
@@ -98,9 +94,9 @@ export default function HomePage({ onNavigate }: HomePageProps) {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {[
               { value: '30K+', label: 'Robux Ready' },
-              { value: '5K+', label: 'Pelanggan Puas' },
-              { value: '< 5 min', label: 'Waktu Kirim' },
-              { value: '24/7', label: 'Layanan Support' },
+              { value: '100+', label: 'Vouch' },
+              { value: '10 Mins', label: 'Fast Delivery' },
+              { value: '24 Hours', label: 'Encounter Support' },
             ].map((stat, i) => (
               <div key={i} className="text-center p-8 rounded-3xl bg-white border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
                 <div className="text-3xl sm:text-4xl font-black text-green-600 mb-2 tracking-tighter">{stat.value}</div>
