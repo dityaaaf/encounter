@@ -70,10 +70,10 @@ export default function Navbar({ currentPage, onNavigate }: NavbarProps) {
                 <>
                   <button
                     onClick={() => handleNav('history')}
-                    className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all ${
+                    className={`flex items-center gap-2 px-5 py-2.5 rounded-xl border-2 text-sm font-bold transition-all ${
                       currentPage === 'history'
-                        ? 'bg-green-50 text-green-600'
-                        : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50'
+                        ? 'bg-slate-900 text-white border-slate-900'
+                        : 'bg-white text-slate-700 border-slate-200 hover:border-slate-900 hover:text-slate-900'
                     }`}
                   >
                     <History className="w-4 h-4" />
@@ -81,7 +81,7 @@ export default function Navbar({ currentPage, onNavigate }: NavbarProps) {
                   </button>
                   <button
                     onClick={() => handleNav('profile')}
-                    className={`flex items-center gap-2 px-5 py-2.5 rounded-xl border-2 transition-all ${
+                    className={`flex items-center gap-2 px-5 py-2.5 rounded-xl border-2 text-sm font-bold transition-all ${
                       currentPage === 'profile'
                         ? 'bg-slate-900 text-white border-slate-900'
                         : 'bg-white text-slate-700 border-slate-200 hover:border-slate-900 hover:text-slate-900'
