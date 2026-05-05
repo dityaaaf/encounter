@@ -1,6 +1,7 @@
 import { ChevronRight, Sparkles } from 'lucide-react';
 import RobuxIcon from '../components/RobuxIcon';
 import logoEct from '../images/ect.png';
+import robuxImg from '../images/robux.png';
 
 interface HomePageProps {
   onNavigate: (page: string) => void;
@@ -28,17 +29,25 @@ export default function HomePage({ onNavigate }: HomePageProps) {
   return (
     <div className="min-h-screen bg-[#f8fafc]">
       {/* Hero Section */}
-      <section className="relative pt-40 pb-24 overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[1000px] bg-green-500/5 rounded-full blur-[120px] pointer-events-none" />
-        <div className="absolute top-20 right-10 w-64 h-64 bg-blue-500/5 rounded-full blur-[100px] pointer-events-none" />
+      <section className="relative pt-40 pb-24 overflow-hidden bg-slate-100">
+        <div 
+          className="absolute inset-0 opacity-[0.03] pointer-events-none" 
+          style={{ 
+            backgroundImage: `url(${robuxImg})`, 
+            backgroundSize: '80px 80px',
+            backgroundRepeat: 'repeat',
+            backgroundPosition: 'center'
+          }} 
+        />
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
 
-          <h1 className="text-5xl sm:text-6xl md:text-8xl font-black text-slate-900 mb-8 leading-tight animate-fadeIn tracking-tight">
-            Encounter
-            <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-500 to-green-700">
-              Robux Store
+          <h1 className="text-5xl sm:text-6xl md:text-8xl font-black text-slate-900 mb-8 leading-tight animate-fadeIn tracking-tight flex flex-col items-center justify-center gap-2">
+            <span style={{ fontFamily: "'Righteous', cursive", letterSpacing: '0.02em' }} className="text-slate-900">
+              Encounter
+            </span>
+            <span className="text-slate-900">
+              Roblox Store
             </span>
           </h1>
 

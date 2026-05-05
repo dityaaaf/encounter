@@ -239,7 +239,7 @@ export default function ProfilePage({ onNavigate }: ProfilePageProps) {
         return (
           <div className="space-y-6 animate-fadeIn">
             <div className="bg-white p-8 rounded-3xl border border-slate-200 shadow-xl relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-yellow-100 to-orange-50 rounded-full blur-3xl opacity-50 -z-10 translate-x-1/2 -translate-y-1/2"></div>
+              <div className="absolute top-0 right-0 w-64 h-64 bg-yellow-100 rounded-full blur-3xl opacity-50 -z-10 translate-x-1/2 -translate-y-1/2"></div>
               
               <div className="flex items-center gap-4 mb-8">
                 <img src={logoEct} alt="Encounter Store Logo" className="w-16 h-16 object-contain drop-shadow-xl animate-float" />
@@ -266,7 +266,7 @@ export default function ProfilePage({ onNavigate }: ProfilePageProps) {
                     <div 
                       key={user.user_id} 
                       className={`flex items-center gap-4 p-5 rounded-2xl border transition-all hover:scale-[1.01] ${
-                        index === 0 ? 'bg-gradient-to-r from-yellow-50 to-orange-50 border-yellow-200 shadow-md' :
+                        index === 0 ? 'bg-yellow-50 border-yellow-200 shadow-md' :
                         index === 1 ? 'bg-slate-50 border-slate-200' :
                         index === 2 ? 'bg-orange-50/50 border-orange-100' :
                         'bg-white border-slate-100 hover:border-slate-200'
